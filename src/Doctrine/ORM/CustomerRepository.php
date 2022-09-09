@@ -8,7 +8,7 @@ use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository as BaseCustomerRepo
 
 final class CustomerRepository extends BaseCustomerRepository implements CustomerRepositoryInterface
 {
-    public function findByEmailPart(string $email): array
+    public function findByEmailPart(string $email, int $limit = 10): array
     {
         return $this
             ->_em
@@ -16,6 +16,7 @@ final class CustomerRepository extends BaseCustomerRepository implements Custome
             ->select('o.id', 'o.email')
             ->from($this->_entityName, 'o')
             ->andWhere('o.email LIKE :email')
+            ->setMaxResults($limit)
             ->setParameter('email', '%' . $email . '%')
             ->getQuery()
             ->getResult()
